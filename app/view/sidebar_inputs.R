@@ -9,7 +9,13 @@ box::use(
         strong,
         moduleServer,
         icon,
-        NS],
+        NS,
+        bindEvent,
+        observe],
+)
+
+box::use(
+  app/logic/compount_interest_logic[calculate_compound_interest],
 )
 
 #' @export
@@ -50,8 +56,13 @@ ui <- function(id){
 }
 
 #' @export
-server <- function(id) {
+server <- function(id, result_of_simulation) {
   moduleServer(id, function(input, output, session) {
-    print("Chart module server part works!")
+
+    observe({
+      result_of_simulation$data <- calculate_compound_interest(input$years, input$PV, input$i, input$MD)
+    }) |>
+      bindEvent(input$Calculate)
+
   })
 }

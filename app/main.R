@@ -14,12 +14,13 @@ box::use(
 ui <- function(id) {
   ns <- NS(id)
   page_sidebar(
-    title = "Penguins dashboard",
+    title = "Shiny Compound Interest Calculator 🧮",
     sidebar = sidebar_inputs$ui(ns("sidebar")),
     theme = bs_theme(
       bootswatch = "darkly",
-      base_font = font_google("Inter"),
-      navbar_bg = "#25443B"
+      base_font = font_google("Poppins"),
+      # Make purple grape the color of navbar
+      navbar_bg = "#6a287e",
     ),
     "Building"
   )
@@ -38,6 +39,7 @@ server <- function(id) {
   moduleServer(id, function(input, output, session) {
 
 
+    # Return data from sidebar_inputs module
     sidebar_inputs$server("sidebar")
 
   })
