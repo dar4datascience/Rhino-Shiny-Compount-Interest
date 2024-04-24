@@ -1,5 +1,5 @@
 box::use(
-  shiny[bootstrapPage, div, moduleServer, NS, renderUI, tags, uiOutput],
+  shiny[bootstrapPage, div, moduleServer, NS, renderUI, tags, reactiveValues],
   bslib[bs_theme,
         page_sidebar],
   sass[font_google],
@@ -8,7 +8,8 @@ box::use(
 )
 
 box::use(
-  app/view/sidebar_inputs
+  app/view/sidebar_inputs,
+  app/view/analyze_results,
 )
 #' @export
 ui <- function(id) {
@@ -22,7 +23,7 @@ ui <- function(id) {
       # Make purple grape the color of navbar
       navbar_bg = "#6a287e",
     ),
-    "Building"
+    analyze_results$ui(ns("analyze_results"))
   )
 
 
@@ -38,9 +39,13 @@ theme_set(theme_bw(base_size = 16))
 server <- function(id) {
   moduleServer(id, function(input, output, session) {
 
+    result_of_simulation <- reactiveValues(data = NULL)
+
 
     # Return data from sidebar_inputs module
-    sidebar_inputs$server("sidebar")
+    sidebar_inputs$server("sidebar", result_of_simulation)
+    # Return data from analyze_results module
+    analyze_results$server("analyze_results", result_of_simulation)
 
   })
 }

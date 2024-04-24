@@ -1,28 +1,21 @@
 box::use(
-  highcharter[highchart,
-              hc_chart,
-              hc_xAxis,
-              hc_plotOptions,
-              hc_series],
-  DT[datatable],
+  plotly[plot_ly,
+              add_trace,
+              layout],
+  DT[datatable,
+     formatRound],
 )
 
 #' @export
 plot_compount_interest <- function(result_of_simulation){
 
-  # Define the plot
-  highchart(result_of_simulation) %>%
-    hc_chart(type = "column") %>%
-    hc_xAxis(title = list(text = "Years")) %>%
-    hc_plotOptions(column = list(
-      dataLabels = list(enabled = FALSE),
-      stacking = "normal",
-      enableMouseTracking = TRUE)
-    ) %>%
-    hc_series(
-      list(name = "Total Interest", data = result_of_simulation[['compound_df']]$`Total Interest`, color = "green"),
-      list(name = "Total Deposits", data = result_of_simulation[['compound_df']]$`Total Deposits`, color = "blue")
-    )
+  # Create the stacked bar chart using plot_ly
+  plot_ly(data = result_of_simulation, type = "bar") |>
+    add_trace(x = ~Year, y = ~Total.Interest, name = "Total Interest", marker = list(color = "green")) |>
+    add_trace(x = ~Year, y = ~Total.Deposits, name = "Total Deposits", marker = list(color = "blue")) |>
+    layout(xaxis = list(title = "Years"),
+           yaxis = list(title = "Amount"),
+           barmode = "stack")
 }
 
 
